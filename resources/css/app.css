@@ -1,0 +1,1494 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =================================================================
+ * DESIGN TOKENS — single source of truth (public site only)
+ * Tokens consumed by tailwind.config.js via var(--*).
+ * ================================================================= */
+@layer base {
+    :root {
+        /* Light theme (default for CRM, fallback for public) */
+        --bg-base: 250 250 250;
+        --bg-elevated: 255 255 255;
+        --bg-glass: rgba(15, 23, 42, 0.04);
+        --surface-1: 241 245 249;
+        --surface-2: 226 232 240;
+
+        --text-primary: 15 23 42;
+        --text-secondary: 71 85 105;
+        --text-muted: 148 163 184;
+
+        --accent: 239 68 68;
+        --accent-hover: 220 38 38;
+        --accent-soft: rgba(239, 68, 68, 0.10);
+
+        --border-subtle: rgba(15, 23, 42, 0.08);
+        --border-strong: rgba(15, 23, 42, 0.14);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --radius-xl: 28px;
+        --radius-pill: 9999px;
+
+        --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+        --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+        --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.14);
+        --shadow-glow: 0 10px 30px rgba(239, 68, 68, 0.28);
+        --shadow-glow-lg: 0 18px 50px rgba(239, 68, 68, 0.45);
+        --shadow-elevation: 0 24px 80px rgba(15, 23, 42, 0.12);
+
+        --dur-fast: 150ms;
+        --dur-base: 250ms;
+        --dur-slow: 500ms;
+
+        --ring-focus: rgba(239, 68, 68, 0.40);
+    }
+
+    html.dark {
+        --bg-base: 9 9 11;
+        --bg-elevated: 17 17 19;
+        --bg-glass: rgba(255, 255, 255, 0.04);
+        --surface-1: 24 24 27;
+        --surface-2: 39 39 42;
+
+        --text-primary: 250 250 250;
+        --text-secondary: 161 161 170;
+        --text-muted: 113 113 122;
+
+        --accent: 239 68 68;
+        --accent-hover: 248 113 113;
+        --accent-soft: rgba(239, 68, 68, 0.14);
+
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.16);
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+        --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.6);
+        --shadow-glow: 0 10px 40px rgba(239, 68, 68, 0.36);
+        --shadow-glow-lg: 0 24px 70px rgba(239, 68, 68, 0.55);
+        --shadow-elevation: 0 32px 96px rgba(0, 0, 0, 0.7);
+    }
+
+    html {
+        background-color: rgb(var(--bg-base));
+        color: rgb(var(--text-primary));
+    }
+
+    body {
+        background-color: rgb(var(--bg-base));
+        color: rgb(var(--text-primary));
+        transition: background-color var(--dur-base) ease, color var(--dur-base) ease;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background-color: rgba(239, 68, 68, 0.28);
+        color: rgb(var(--text-primary));
+    }
+
+    /* Custom scrollbar (public site, dark-aware) */
+    html.dark ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    html.dark ::-webkit-scrollbar-track {
+        background: rgb(var(--bg-base));
+    }
+    html.dark ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 9999px;
+    }
+    html.dark ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.22);
+    }
+}
+
+/* =================================================================
+ * COMPONENT LAYER — premium primitives for the public site.
+ * ================================================================= */
+@layer components {
+    /* Eyebrow label (small caps tracking-wide) used above section titles */
+    .section-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgb(var(--text-secondary));
+    }
+
+    .section-eyebrow::before {
+        content: '';
+        display: inline-block;
+        width: 24px;
+        height: 1px;
+        background: rgb(var(--accent));
+    }
+
+    /* Glass card — frosted surface used in hero, pricing, feature cards */
+    .glass-card {
+        position: relative;
+        background: var(--bg-glass);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        transition: border-color var(--dur-base) ease, transform var(--dur-base) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)), box-shadow var(--dur-base) ease;
+    }
+
+    .glass-card:hover {
+        border-color: var(--border-strong);
+    }
+
+    /* Hairline horizontal divider with subtle gradient */
+    .hairline {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+        border: none;
+    }
+
+    .hairline-vertical {
+        width: 1px;
+        background: linear-gradient(180deg, transparent, var(--border-subtle), transparent);
+    }
+
+    /* Premium primary button (used by PrimaryButton.vue + standalone CTAs) */
+    .premium-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        color: #fff;
+        background: rgb(var(--accent));
+        border: 1px solid rgb(var(--accent));
+        border-radius: var(--radius-pill);
+        box-shadow: var(--shadow-glow);
+        transition: transform var(--dur-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--dur-base) ease, background-color var(--dur-base) ease;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .premium-btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+        transform: translateX(-100%);
+        transition: transform 700ms ease;
+        pointer-events: none;
+    }
+
+    .premium-btn:hover {
+        background: rgb(var(--accent-hover));
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-glow-lg);
+    }
+
+    .premium-btn:hover::after {
+        transform: translateX(100%);
+    }
+
+    .premium-btn:active {
+        transform: translateY(0);
+    }
+
+    .premium-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--shadow-glow), 0 0 0 4px var(--ring-focus);
+    }
+
+    .premium-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .premium-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        letter-spacing: 0.02em;
+        color: rgb(var(--text-primary));
+        background: transparent;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-pill);
+        transition: background-color var(--dur-base) ease, border-color var(--dur-base) ease, transform var(--dur-base) ease;
+        cursor: pointer;
+    }
+
+    .premium-btn-secondary:hover {
+        background: var(--bg-glass);
+        border-color: rgb(var(--accent));
+        color: rgb(var(--accent));
+        transform: translateY(-2px);
+    }
+
+    .premium-btn-secondary:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px var(--ring-focus);
+    }
+
+    /* Display heading utility — large editorial titles */
+    .display-heading {
+        font-family: 'Manrope', 'Inter', 'Figtree', system-ui, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+    }
+
+    /* KPI tile — large stat number with eyebrow */
+    .kpi-tile {
+        position: relative;
+        padding: 2rem 1.5rem;
+        border-top: 1px solid var(--border-subtle);
+    }
+
+    .kpi-tile-number {
+        font-family: 'Manrope', 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: rgb(var(--text-primary));
+        background: linear-gradient(135deg, rgb(var(--text-primary)), rgb(var(--text-secondary)));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+/* =================================================================
+ * UTILITY LAYER — helpers for radial glow, grid bg, text balance.
+ * ================================================================= */
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .bg-grid {
+        background-image:
+            linear-gradient(var(--border-subtle) 1px, transparent 1px),
+            linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 70%);
+    }
+
+    .bg-radial-glow {
+        background:
+            radial-gradient(ellipse 60% 50% at 50% 0%, var(--accent-soft), transparent 60%),
+            radial-gradient(ellipse 70% 50% at 100% 100%, var(--accent-soft), transparent 50%);
+    }
+
+    .bg-noise {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .mask-fade-edges {
+        mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+        -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    }
+
+    /* Scroll-reveal utility — paired with v-reveal directive */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
+
+    .reveal-on-scroll.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal-on-scroll {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+}
+
+/* =================================================================
+ * Legacy globals (carry-overs from initial design — kept for compatibility)
+ * ================================================================= */
+[x-cloak] {
+    display: none;
+}
+
+.twemoji {
+    height: 1em;
+    width: 1em;
+    vertical-align: -0.1em;
+}
+
+.emoji-icon {
+    width: 21px !important;
+    height: auto;
+    margin-bottom: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    border: 2px solid #cbd5e1; /* slate-300 */
+    border-radius: 6px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .1s;
+}
+
+.checkbox:checked {
+    background-color: #4f46e5; /* indigo-600 */
+    border-color: #4f46e5;
+}
+
+.checkbox:checked::after {
+    color: white;
+    font-size: 12px;
+    line-height: 1;
+}
+
+/* =================================================================
+ * === CRM THEME — DO NOT TOUCH ===
+ * Stable rules used by the admin CRM (47 pages, PrimeVue DataTable).
+ * Public redesign must not modify this block.
+ * ================================================================= */
+
+/* Unified CRM look (matching Team pages) */
+.crm-theme .max-w-screen-2xl {
+    max-width: 80rem;
+}
+
+.crm-theme .p-card {
+    background: #ffffff;
+    border: 1px solid #dbe4ef;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.crm-theme .p-card .p-card-body {
+    padding: 0;
+}
+
+.crm-theme .p-card .p-card-title {
+    padding: 1.25rem 1.25rem 0;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.crm-theme .p-card .p-card-content {
+    padding: 0 1.25rem 1.25rem;
+}
+
+.crm-theme .p-toolbar {
+    background: transparent;
+    border: none;
+    padding: 0 0 0.75rem 0;
+}
+
+.crm-theme .p-datatable {
+    border: 1px solid #dbe4ef;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.crm-theme .p-datatable .p-datatable-header {
+    background: #f8fafc;
+    border: none;
+}
+
+.crm-theme .p-datatable .p-datatable-thead > tr > th {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+}
+
+.crm-theme .p-datatable .p-datatable-tbody > tr > td {
+    border-color: #eef2f7;
+    color: #0f172a;
+    padding: 0.9rem 1rem;
+}
+
+.crm-theme .p-datatable .p-datatable-tbody > tr:hover {
+    background: #f8fafc;
+}
+
+.crm-theme .p-paginator {
+    border-top: 1px solid #e2e8f0;
+    padding: 0.7rem 0.8rem;
+}
+
+.crm-theme .p-dialog {
+    border: 1px solid #dbe4ef;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+}
+
+.crm-theme .p-dialog .p-dialog-header {
+    border-bottom: 1px solid #e2e8f0;
+    color: #0f172a;
+    font-weight: 700;
+    padding: 1rem 1.25rem;
+}
+
+.crm-theme .p-dialog .p-dialog-content {
+    padding: 1rem 1.25rem;
+}
+
+.crm-theme .p-dialog .p-dialog-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 0.75rem 1.25rem 1.25rem;
+}
+
+.crm-theme .p-inputtext,
+.crm-theme .p-inputnumber-input,
+.crm-theme .p-dropdown,
+.crm-theme .p-calendar .p-inputtext,
+.crm-theme .p-inputtextarea {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    color: #0f172a;
+    min-height: 44px;
+}
+
+.crm-theme .p-inputtext:focus,
+.crm-theme .p-inputnumber-input:focus,
+.crm-theme .p-dropdown:not(.p-disabled).p-focus,
+.crm-theme .p-calendar .p-inputtext:focus,
+.crm-theme .p-inputtextarea:focus {
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.2);
+}
+
+.crm-theme .p-float-label label {
+    color: #64748b;
+    background-color: white;
+    padding: 0 0.5rem;
+}
+
+.crm-theme .p-selectbutton .p-button {
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+}
+
+.crm-theme .p-selectbutton .p-button.p-highlight {
+    background: #4f46e5;
+    border-color: #4f46e5;
+    color: #fff;
+}
+
+.crm-theme .p-button {
+    background: #0f172a;
+    border: 1px solid #0f172a;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.65rem 1rem;
+}
+
+.crm-theme .p-button:enabled:hover {
+    background: #1e293b;
+    border-color: #1e293b;
+}
+
+.crm-theme .p-button.p-button-secondary {
+    background: #334155;
+    border-color: #334155;
+}
+
+.crm-theme .p-button.p-button-danger {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.crm-theme .p-button.p-button-success {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+
+.crm-theme .p-button.p-button-text {
+    background: transparent;
+    border-color: transparent;
+    color: #0f172a;
+    padding: 0.5rem 0.75rem;
+}
+
+/* ===== Public form styling (catalog filters, calculator, etc.) ===== */
+.filter-panel .p-inputtext,
+.filter-panel .p-inputnumber-input,
+.filter-panel .p-dropdown,
+.filter-panel .p-calendar .p-inputtext,
+.filter-panel .p-inputtextarea {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px !important;
+    color: #0f172a;
+    font-size: 0.9375rem;
+    min-height: 46px;
+    padding: 0.65rem 0.95rem;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+.filter-panel .p-inputtext::placeholder,
+.filter-panel .p-inputnumber-input::placeholder,
+.filter-panel .p-calendar .p-inputtext::placeholder {
+    color: #94a3b8;
+}
+
+.filter-panel .p-inputtext:hover,
+.filter-panel .p-inputnumber-input:hover,
+.filter-panel .p-dropdown:not(.p-disabled):hover,
+.filter-panel .p-calendar .p-inputtext:hover {
+    border-color: #cbd5e1;
+}
+
+.filter-panel .p-inputtext:focus,
+.filter-panel .p-inputnumber-input:focus,
+.filter-panel .p-dropdown:not(.p-disabled).p-focus,
+.filter-panel .p-calendar .p-inputtext:focus,
+.filter-panel .p-inputtextarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    outline: none;
+}
+
+.filter-panel .p-dropdown {
+    display: flex;
+    align-items: center;
+}
+
+.filter-panel .p-dropdown .p-dropdown-label {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent !important;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: none;
+}
+
+.filter-panel .p-dropdown .p-dropdown-label.p-placeholder {
+    background: transparent !important;
+    color: #94a3b8;
+}
+
+.filter-panel .p-dropdown .p-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    color: #94a3b8;
+}
+
+.filter-panel .p-dropdown.p-disabled,
+.filter-panel .p-inputtext:disabled,
+.filter-panel .p-inputnumber-input:disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.filter-panel .p-input-icon-left {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    width: 100%;
+}
+
+.filter-panel .p-input-icon-left > i,
+.filter-panel .p-input-icon-left > .p-inputtext {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.filter-panel .p-input-icon-left > i {
+    justify-self: start;
+    margin-left: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.filter-panel .p-input-icon-left > .p-inputtext {
+    padding-left: 2.5rem !important;
+}
+
+/* Dropdown panel (the open menu) */
+.p-dropdown-panel {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding: 0.6rem 0.85rem;
+    color: #0f172a;
+    font-size: 0.9375rem;
+    border-radius: 8px;
+    margin: 0.15rem 0.35rem;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background: #fef2f2;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.p-dropdown-panel .p-dropdown-header {
+    padding: 0.65rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.875rem;
+}
+
+/* Inputgroup (input + clear button row in filters) */
+.filter-panel .p-inputgroup {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+
+.filter-panel .p-inputgroup > .p-inputtext,
+.filter-panel .p-inputgroup > .p-dropdown,
+.filter-panel .p-inputgroup > .p-calendar,
+.filter-panel .p-inputgroup > .p-inputnumber {
+    flex: 1;
+    min-width: 0;
+}
+
+.filter-panel .p-inputgroup > .p-button {
+    flex-shrink: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+    margin-left: -1px;
+    width: 46px;
+    padding: 0;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.filter-panel .p-inputgroup > .p-button:hover {
+    background: #e2e8f0;
+    color: #ef4444;
+}
+
+.filter-panel .p-inputgroup > .p-inputtext:not(:last-child),
+.filter-panel .p-inputgroup > .p-dropdown:not(:last-child),
+.filter-panel .p-inputgroup > .p-calendar:not(:last-child) .p-inputtext,
+.filter-panel .p-inputgroup > .p-inputnumber:not(:last-child) .p-inputnumber-input {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.filter-panel .p-inputnumber {
+    display: flex;
+    width: 100%;
+}
+
+.filter-panel .p-calendar {
+    width: 100%;
+}
+
+/* Calendar (datepicker) panel */
+.p-datepicker {
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    padding: 0.85rem;
+}
+
+.p-datepicker table td > span.p-highlight {
+    background: #ef4444;
+    color: #fff;
+}
+
+.p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight,
+.p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
+    background: #ef4444;
+    color: #fff;
+}
+
+.p-datepicker table td > span:not(.p-highlight):not(.p-disabled):hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ===== Public native form (calculator modal etc.) ===== */
+.public-form-input {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    color: #0f172a;
+    font-size: 0.9375rem;
+    padding: 0.7rem 0.95rem;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.public-form-input::placeholder {
+    color: #94a3b8;
+}
+
+.public-form-input:hover {
+    border-color: #cbd5e1;
+}
+
+.public-form-input:focus {
+    outline: none;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.public-form-radio,
+.public-form-checkbox {
+    accent-color: #ef4444;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* ===== Catalog car card image wrapper (forces 4:3 + 240px on desktop) ===== */
+.car-card-image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+    .car-card-image-wrapper {
+        width: 240px;
+        max-width: 240px;
+    }
+}
+
+/* ===== Info card icon (fixed 40x40 square) ===== */
+.info-card-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    transition: background-color .15s ease, transform .15s ease;
+}
+
+/* ===== Catalog Show page icon helpers ===== */
+.show-avatar {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+}
+
+.show-icon-md {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+}
+
+.show-icon-sm {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+/* ===== Lightbox / PhotoSlider ===== */
+.lightbox-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color .15s ease;
+    flex-shrink: 0;
+}
+
+.lightbox-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color .15s ease;
+    z-index: 5;
+}
+
+.lightbox-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-nav-btn--left {
+    left: 16px;
+}
+
+.lightbox-nav-btn--right {
+    right: 16px;
+}
+
+@media (min-width: 640px) {
+    .lightbox-nav-btn--left {
+        left: 24px;
+    }
+
+    .lightbox-nav-btn--right {
+        right: 24px;
+    }
+}
+
+.lightbox-thumb {
+    flex-shrink: 0;
+    width: 80px;
+    height: 56px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity .15s ease, border-color .15s ease;
+    padding: 0;
+    background: transparent;
+}
+
+.lightbox-thumb:hover {
+    opacity: 1;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.lightbox-thumb.is-active {
+    opacity: 1;
+    border-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.4);
+}
+
+.lightbox-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (min-width: 640px) {
+    .lightbox-thumb {
+        width: 96px;
+        height: 64px;
+    }
+}
+
+/* ===== Public DataView pagination (catalog list) ===== */
+.custom-pagination .p-paginator {
+    background: transparent !important;
+    border: none !important;
+    padding: 0.75rem 0.5rem !important;
+    gap: 0.35rem !important;
+    justify-content: center !important;
+}
+
+.custom-pagination .p-paginator .p-paginator-page,
+.custom-pagination .p-paginator .p-paginator-next,
+.custom-pagination .p-paginator .p-paginator-prev,
+.custom-pagination .p-paginator .p-paginator-first,
+.custom-pagination .p-paginator .p-paginator-last {
+    min-width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 10px !important;
+    color: #475569 !important;
+    background: transparent !important;
+    border: 1px solid #e2e8f0 !important;
+    font-weight: 500 !important;
+    margin: 0 !important;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.custom-pagination .p-paginator .p-paginator-page:not(.p-highlight):hover,
+.custom-pagination .p-paginator .p-paginator-next:not(.p-disabled):hover,
+.custom-pagination .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+.custom-pagination .p-paginator .p-paginator-first:not(.p-disabled):hover,
+.custom-pagination .p-paginator .p-paginator-last:not(.p-disabled):hover {
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border-color: #fecaca !important;
+}
+
+.custom-pagination .p-paginator .p-paginator-page.p-highlight {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+    font-weight: 700 !important;
+}
+
+.custom-pagination .p-paginator .p-paginator-next.p-disabled,
+.custom-pagination .p-paginator .p-paginator-prev.p-disabled,
+.custom-pagination .p-paginator .p-paginator-first.p-disabled,
+.custom-pagination .p-paginator .p-paginator-last.p-disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+    background: transparent !important;
+}
+
+.custom-pagination .p-paginator .p-paginator-page:focus,
+.custom-pagination .p-paginator .p-paginator-next:focus,
+.custom-pagination .p-paginator .p-paginator-prev:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
+    outline: none !important;
+}
+
+/* ===== Telegram CTA bubble (Home Telegram section) ===== */
+.tg-bubble {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 9999px;
+    font-size: 20px;
+}
+
+@media (min-width: 640px) {
+    .tg-bubble {
+        width: 64px;
+        height: 64px;
+        font-size: 28px;
+    }
+}
+
+/* =================================================================
+ * === DARK PrimeVue overrides (public site) ===
+ * Applied only when <html class="dark">. CRM forces .light → not affected.
+ * ================================================================= */
+
+html.dark .filter-panel .p-inputtext,
+html.dark .filter-panel .p-inputnumber-input,
+html.dark .filter-panel .p-dropdown,
+html.dark .filter-panel .p-calendar .p-inputtext,
+html.dark .filter-panel .p-inputtextarea {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+    color: #fafafa;
+}
+
+html.dark .filter-panel .p-inputtext::placeholder,
+html.dark .filter-panel .p-inputnumber-input::placeholder,
+html.dark .filter-panel .p-calendar .p-inputtext::placeholder {
+    color: #71717a;
+}
+
+html.dark .filter-panel .p-dropdown .p-dropdown-label,
+html.dark .filter-panel .p-dropdown .p-dropdown-label.p-placeholder {
+    background: transparent !important;
+    box-shadow: none;
+}
+
+html.dark .filter-panel .p-dropdown .p-dropdown-label.p-placeholder {
+    color: #71717a;
+}
+
+html.dark .filter-panel .p-inputtext:hover,
+html.dark .filter-panel .p-inputnumber-input:hover,
+html.dark .filter-panel .p-dropdown:not(.p-disabled):hover,
+html.dark .filter-panel .p-calendar .p-inputtext:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+html.dark .filter-panel .p-inputtext:focus,
+html.dark .filter-panel .p-inputnumber-input:focus,
+html.dark .filter-panel .p-dropdown:not(.p-disabled).p-focus,
+html.dark .filter-panel .p-calendar .p-inputtext:focus,
+html.dark .filter-panel .p-inputtextarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+html.dark .filter-panel .p-dropdown .p-dropdown-trigger,
+html.dark .filter-panel .p-input-icon-left > i {
+    color: #71717a;
+}
+
+html.dark .filter-panel .p-dropdown.p-disabled,
+html.dark .filter-panel .p-inputtext:disabled,
+html.dark .filter-panel .p-inputnumber-input:disabled {
+    background: rgba(255, 255, 255, 0.02);
+    color: #52525b;
+}
+
+html.dark .filter-panel .p-inputgroup > .p-button {
+    background: rgba(255, 255, 255, 0.04);
+    color: #a1a1aa;
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+html.dark .filter-panel .p-inputgroup > .p-button:hover {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+/* Dropdown panel (open menu) */
+html.dark .p-dropdown-panel {
+    background: #18181b;
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+html.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    color: #e4e4e7;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+html.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background: rgba(239, 68, 68, 0.18);
+    color: #fca5a5;
+}
+
+html.dark .p-dropdown-panel .p-dropdown-header {
+    background: #09090b;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+    color: #fafafa;
+}
+
+/* Datepicker / Calendar */
+html.dark .p-datepicker {
+    background: #18181b;
+    border-color: rgba(255, 255, 255, 0.10);
+    color: #e4e4e7;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+html.dark .p-datepicker .p-datepicker-header {
+    background: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    color: #fafafa;
+}
+
+html.dark .p-datepicker table th {
+    color: #a1a1aa;
+}
+
+html.dark .p-datepicker table td > span {
+    color: #e4e4e7;
+}
+
+html.dark .p-datepicker table td > span:not(.p-highlight):not(.p-disabled):hover {
+    background: rgba(239, 68, 68, 0.18);
+    color: #fca5a5;
+}
+
+html.dark .p-datepicker .p-yearpicker .p-yearpicker-year:not(.p-highlight):hover,
+html.dark .p-datepicker .p-monthpicker .p-monthpicker-month:not(.p-highlight):hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fafafa;
+}
+
+html.dark .p-datepicker button.p-link {
+    color: #a1a1aa;
+}
+
+html.dark .p-datepicker button.p-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fafafa;
+}
+
+/* Custom pagination (Catalog) */
+html.dark .custom-pagination .p-paginator .p-paginator-page,
+html.dark .custom-pagination .p-paginator .p-paginator-next,
+html.dark .custom-pagination .p-paginator .p-paginator-prev,
+html.dark .custom-pagination .p-paginator .p-paginator-first,
+html.dark .custom-pagination .p-paginator .p-paginator-last {
+    color: #a1a1aa !important;
+    border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+html.dark .custom-pagination .p-paginator .p-paginator-page:not(.p-highlight):hover,
+html.dark .custom-pagination .p-paginator .p-paginator-next:not(.p-disabled):hover,
+html.dark .custom-pagination .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+html.dark .custom-pagination .p-paginator .p-paginator-first:not(.p-disabled):hover,
+html.dark .custom-pagination .p-paginator .p-paginator-last:not(.p-disabled):hover {
+    background: rgba(239, 68, 68, 0.14) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239, 68, 68, 0.40) !important;
+}
+
+html.dark .custom-pagination .p-paginator .p-paginator-page.p-highlight {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+}
+
+/* Public native form inputs */
+html.dark .public-form-input {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+    color: #fafafa;
+}
+
+html.dark .public-form-input::placeholder {
+    color: #71717a;
+}
+
+html.dark .public-form-input:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+html.dark .public-form-input:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Generic PrimeVue components used on public pages */
+html.dark .p-dialog {
+    background: #18181b;
+    color: #fafafa;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+html.dark .p-dialog .p-dialog-header {
+    background: transparent;
+    color: #fafafa;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.dark .p-dialog .p-dialog-content {
+    background: transparent;
+    color: #e4e4e7;
+}
+
+html.dark .p-dialog .p-dialog-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.dark .p-dialog-mask {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+}
+
+/* DataView grid (catalog list) */
+html.dark .p-dataview .p-dataview-content,
+html.dark .p-dataview .p-dataview-header,
+html.dark .p-dataview .p-dataview-footer {
+    background: transparent;
+    color: #fafafa;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .p-dataview-emptymessage {
+    color: #a1a1aa;
+}
+
+/* =================================================================
+ * === CRM THEME ENHANCEMENTS ===
+ * Layered on top of the base CRM theme (do not modify the base block).
+ * Polishes cards, tables, buttons, paginator without breaking the flow.
+ * ================================================================= */
+
+/* Page background — subtle gradient */
+.crm-theme {
+    background:
+        radial-gradient(ellipse 60% 30% at 0% 0%, rgba(79, 70, 229, 0.04), transparent 60%),
+        radial-gradient(ellipse 50% 30% at 100% 0%, rgba(239, 68, 68, 0.04), transparent 60%),
+        #f8fafc;
+}
+
+/* Cards — softer corners, smoother shadows, subtle hover lift */
+.crm-theme .p-card {
+    border-radius: 16px;
+    border-color: #e6ecf3;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 200ms ease;
+}
+
+.crm-theme .p-card:hover {
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 18px 40px rgba(15, 23, 42, 0.07);
+}
+
+/* Toolbar — give it a small left accent bar instead of plain padding */
+.crm-theme .p-toolbar {
+    position: relative;
+}
+
+/* DataTable — rounded corners, header refinement, smooth row hover */
+.crm-theme .p-datatable {
+    border-radius: 16px;
+    border-color: #e6ecf3;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.crm-theme .p-datatable .p-datatable-thead > tr > th {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.crm-theme .p-datatable .p-datatable-tbody > tr {
+    transition: background-color 150ms ease;
+}
+
+.crm-theme .p-datatable .p-datatable-tbody > tr:hover {
+    background: #f8fafc;
+}
+
+.crm-theme .p-datatable .p-datatable-tbody > tr > td {
+    transition: color 150ms ease;
+}
+
+/* Striped rows — easier to scan long tables */
+.crm-theme .p-datatable .p-datatable-tbody > tr:nth-child(even):not(:hover) {
+    background: #fbfcfe;
+}
+
+/* Paginator — pill-shaped buttons */
+.crm-theme .p-paginator {
+    background: transparent;
+    padding: 0.85rem 1rem;
+    gap: 0.25rem;
+}
+
+.crm-theme .p-paginator .p-paginator-page,
+.crm-theme .p-paginator .p-paginator-next,
+.crm-theme .p-paginator .p-paginator-prev,
+.crm-theme .p-paginator .p-paginator-first,
+.crm-theme .p-paginator .p-paginator-last {
+    min-width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    color: #475569;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.crm-theme .p-paginator .p-paginator-page:not(.p-highlight):hover,
+.crm-theme .p-paginator .p-paginator-next:not(.p-disabled):hover,
+.crm-theme .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+.crm-theme .p-paginator .p-paginator-first:not(.p-disabled):hover,
+.crm-theme .p-paginator .p-paginator-last:not(.p-disabled):hover {
+    background: #eef2ff;
+    color: #4338ca;
+    border-color: #e0e7ff;
+}
+
+.crm-theme .p-paginator .p-paginator-page.p-highlight {
+    background: #0f172a;
+    color: #fff;
+    border-color: #0f172a;
+    font-weight: 700;
+}
+
+/* Inputs — smoother focus, taller comfort */
+.crm-theme .p-inputtext,
+.crm-theme .p-inputnumber-input,
+.crm-theme .p-dropdown,
+.crm-theme .p-calendar .p-inputtext,
+.crm-theme .p-inputtextarea {
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.crm-theme .p-inputtext:hover,
+.crm-theme .p-inputnumber-input:hover,
+.crm-theme .p-dropdown:not(.p-disabled):hover,
+.crm-theme .p-calendar .p-inputtext:hover,
+.crm-theme .p-inputtextarea:hover {
+    border-color: #94a3b8;
+}
+
+.crm-theme .p-inputtext:focus,
+.crm-theme .p-inputnumber-input:focus,
+.crm-theme .p-dropdown:not(.p-disabled).p-focus,
+.crm-theme .p-calendar .p-inputtext:focus,
+.crm-theme .p-inputtextarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.16);
+}
+
+/* Buttons — gradient + smooth motion */
+.crm-theme .p-button {
+    border-radius: 10px;
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    border-color: #0f172a;
+    transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, border-color 150ms ease;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.10);
+}
+
+.crm-theme .p-button:enabled:hover {
+    background: linear-gradient(180deg, #334155, #1e293b);
+    transform: translateY(-1px);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.10), 0 8px 20px rgba(15, 23, 42, 0.16);
+}
+
+.crm-theme .p-button:enabled:active {
+    transform: translateY(0);
+}
+
+.crm-theme .p-button.p-button-danger {
+    background: linear-gradient(180deg, #ef4444, #dc2626);
+    border-color: #dc2626;
+    box-shadow: 0 1px 2px rgba(239, 68, 68, 0.18), 0 6px 16px rgba(239, 68, 68, 0.20);
+}
+.crm-theme .p-button.p-button-danger:enabled:hover {
+    background: linear-gradient(180deg, #f87171, #ef4444);
+    box-shadow: 0 1px 2px rgba(239, 68, 68, 0.22), 0 10px 24px rgba(239, 68, 68, 0.30);
+}
+
+.crm-theme .p-button.p-button-success {
+    background: linear-gradient(180deg, #22c55e, #16a34a);
+    border-color: #16a34a;
+    box-shadow: 0 1px 2px rgba(22, 163, 74, 0.16), 0 6px 16px rgba(22, 163, 74, 0.18);
+}
+.crm-theme .p-button.p-button-success:enabled:hover {
+    background: linear-gradient(180deg, #4ade80, #22c55e);
+}
+
+.crm-theme .p-button.p-button-secondary {
+    background: linear-gradient(180deg, #475569, #334155);
+    border-color: #334155;
+}
+.crm-theme .p-button.p-button-secondary:enabled:hover {
+    background: linear-gradient(180deg, #64748b, #475569);
+}
+
+.crm-theme .p-button.p-button-text {
+    background: transparent;
+    box-shadow: none;
+}
+.crm-theme .p-button.p-button-text:enabled:hover {
+    background: #f1f5f9;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Sidebar admin links — smoother active state */
+.crm-theme aside a.bg-slate-900 {
+    background: linear-gradient(180deg, #1e293b, #0f172a) !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.10), 0 6px 14px rgba(15, 23, 42, 0.10);
+}
+
+/* Dialogs — softer shadow, larger radius */
+.crm-theme .p-dialog {
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.10), 0 24px 60px rgba(15, 23, 42, 0.18);
+}
+
+/* Toast notifications — premium look */
+.crm-theme .p-toast .p-toast-message {
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 16px 40px rgba(15, 23, 42, 0.16);
+    border: 1px solid #e6ecf3;
+}
+
+/* Galleria (Cars Show photo gallery) — round corners, refined indicators */
+.crm-theme .p-galleria-content {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.crm-theme .p-galleria-thumbnail-container {
+    background: #f8fafc;
+    padding: 0.75rem;
+    border-radius: 0 0 16px 16px;
+}
+
+.crm-theme .p-galleria-thumbnail-item .p-galleria-thumbnail-item-content img {
+    border-radius: 8px;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.crm-theme .p-galleria-thumbnail-item.p-galleria-thumbnail-item-current .p-galleria-thumbnail-item-content img {
+    box-shadow: 0 0 0 3px #ef4444;
+}
