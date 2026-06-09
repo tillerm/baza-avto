@@ -21,6 +21,7 @@ class Testimonial extends Model
         'city',
         'rating',
         'video_url',
+        'photo',
         'position',
         'is_active',
     ];

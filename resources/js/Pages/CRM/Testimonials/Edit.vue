@@ -23,17 +23,22 @@ const form = useForm({
     city: props.testimonial.city ?? '',
     rating: props.testimonial.rating ?? 5,
     video_url: props.testimonial.video_url ?? '',
+    photo: null,
     position: props.testimonial.position ?? 0,
     is_active: props.testimonial.is_active ?? true,
 });
 
 const isVideo = computed(() => form.type === 'video');
 
+const onPhotoChange = (event) => {
+    form.photo = event.target.files?.[0] ?? null;
+};
+
 const submit = () => {
     if (props.isNew) {
-        form.post(route('crm.testimonials.store'));
+        form.post(route('crm.testimonials.store'), { forceFormData: true });
     } else {
-        form.put(route('crm.testimonials.update', props.testimonial.id));
+        form.put(route('crm.testimonials.update', props.testimonial.id), { forceFormData: true });
     }
 };
 
@@ -171,6 +176,26 @@ const destroyItem = () => {
                                 placeholder="Расскажите историю клиента..."
                             ></textarea>
                             <p v-if="form.errors.text" class="text-sm text-red-600">{{ form.errors.text }}</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-slate-800">Фото (опционально)</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                @change="onPhotoChange"
+                                :disabled="form.processing"
+                                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-slate-800 focus:border-slate-400 focus:ring focus:ring-slate-100"
+                            />
+                            <p v-if="form.errors.photo" class="text-sm text-red-600">{{ form.errors.photo }}</p>
+                            <div v-if="props.testimonial.photo && !form.photo" class="mt-3">
+                                <div class="text-sm text-slate-600 mb-2">Текущее фото:</div>
+                                <img :src="props.testimonial.photo.startsWith('http') ? props.testimonial.photo : '/storage/' + props.testimonial.photo" alt="Фото отзыва" class="max-h-48 rounded-lg object-cover" />
+                            </div>
+                            <div v-if="form.photo" class="mt-3">
+                                <div class="text-sm text-slate-600 mb-2">Выбрано фото:</div>
+                                <img :src="URL.createObjectURL(form.photo)" alt="Новый файл" class="max-h-48 rounded-lg object-cover" />
+                            </div>
                         </div>
                     </template>
 

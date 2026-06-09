@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TestimonialRequest;
 use App\Models\Testimonial;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,6 +33,7 @@ class TestimonialController extends Controller
                 'city' => '',
                 'rating' => 5,
                 'video_url' => '',
+                'photo' => null,
                 'position' => 0,
                 'is_active' => true,
             ],
@@ -41,7 +43,13 @@ class TestimonialController extends Controller
 
     public function store(TestimonialRequest $request)
     {
-        Testimonial::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('testimonials', 'public');
+        }
+
+        Testimonial::create($data);
 
         return redirect()->route('crm.testimonials.index');
     }
@@ -56,7 +64,17 @@ class TestimonialController extends Controller
 
     public function update(TestimonialRequest $request, Testimonial $testimonial)
     {
-        $testimonial->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            if ($testimonial->photo) {
+                Storage::disk('public')->delete($testimonial->photo);
+            }
+
+            $data['photo'] = $request->file('photo')->store('testimonials', 'public');
+        }
+
+        $testimonial->update($data);
 
         return redirect()->route('crm.testimonials.index');
     }

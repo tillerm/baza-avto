@@ -118,6 +118,9 @@ function toEmbedUrl(url) {
                 >
                     <div class="testimonial__quote-mark">“</div>
                     <p class="testimonial__text">{{ t.text }}</p>
+                    <div v-if="t.photo" class="testimonial__image-wrapper">
+                        <img :src="t.photo.startsWith('http') ? t.photo : '/storage/' + t.photo" alt="Фото отзыва" class="testimonial__image" />
+                    </div>
                     <div class="testimonial__footer">
                         <div class="testimonial__avatar">{{ t.author_name?.[0] }}</div>
                         <div class="flex-1 min-w-0">
@@ -298,6 +301,19 @@ function toEmbedUrl(url) {
     flex: 1;
     position: relative;
     z-index: 1;
+}
+
+.testimonial__image-wrapper {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.testimonial__image {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05);
 }
 
 .testimonial__footer {

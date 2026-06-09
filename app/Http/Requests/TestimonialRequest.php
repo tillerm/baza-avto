@@ -24,6 +24,7 @@ class TestimonialRequest extends FormRequest
             'car_model' => ['nullable', 'string', 'max:120'],
             'city' => ['nullable', 'string', 'max:120'],
             'rating' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'photo' => ['nullable', 'image', 'max:5120'],
             'position' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
         ];
