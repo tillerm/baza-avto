@@ -18,6 +18,7 @@ const photoPreview = ref(null);
 const photoInput = ref(null);
 
 const form = useForm({
+    _method: props.isNew ? undefined : 'PUT',
     type: props.testimonial.type ?? 'text',
     title: props.testimonial.title ?? '',
     text: props.testimonial.text ?? '',
@@ -57,7 +58,7 @@ const submit = () => {
     if (props.isNew) {
         form.post(route('crm.testimonials.store'), submitOptions);
     } else {
-        form.put(route('crm.testimonials.update', props.testimonial.id), submitOptions);
+        form.post(route('crm.testimonials.update', props.testimonial.id), submitOptions);
     }
 };
 
