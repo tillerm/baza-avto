@@ -15,17 +15,24 @@ class TestimonialRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $defaultType = Testimonial::TYPE_TEXT;
+        $testimonial = $this->route('testimonial');
 
-        if ($this->route('testimonial') instanceof Testimonial) {
-            $defaultType = $this->route('testimonial')->type ?? $defaultType;
+        if (!$testimonial instanceof Testimonial) {
+            return;
         }
 
-        if (!$this->has('type') || $this->input('type') === null) {
-            $this->merge([
-                'type' => $defaultType,
-            ]);
-        }
+        $this->merge([
+            'type' => $this->has('type') ? $this->input('type') : $testimonial->type,
+            'title' => $this->has('title') ? $this->input('title') : $testimonial->title,
+            'text' => $this->has('text') ? $this->input('text') : $testimonial->text,
+            'author_name' => $this->has('author_name') ? $this->input('author_name') : $testimonial->author_name,
+            'car_model' => $this->has('car_model') ? $this->input('car_model') : $testimonial->car_model,
+            'city' => $this->has('city') ? $this->input('city') : $testimonial->city,
+            'rating' => $this->has('rating') ? $this->input('rating') : $testimonial->rating,
+            'video_url' => $this->has('video_url') ? $this->input('video_url') : $testimonial->video_url,
+            'position' => $this->has('position') ? $this->input('position') : $testimonial->position,
+            'is_active' => $this->has('is_active') ? $this->input('is_active') : $testimonial->is_active,
+        ]);
     }
 
     public function rules(): array
