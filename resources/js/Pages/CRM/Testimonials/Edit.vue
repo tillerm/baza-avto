@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { useForm, router } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     testimonial: {
@@ -13,6 +13,9 @@ const props = defineProps({
         default: false,
     },
 });
+
+const photoPreview = ref(null);
+const photoInput = ref(null);
 
 const form = useForm({
     type: props.testimonial.type ?? 'text',
@@ -30,8 +33,17 @@ const form = useForm({
 
 const isVideo = computed(() => form.type === 'video');
 
-const onPhotoChange = (event) => {
-    form.photo = event.target.files?.[0] ?? null;
+const onPhotoChange = () => {
+    const photo = photoInput.value?.files?.[0];
+    if (!photo) return;
+
+    form.photo = photo;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        photoPreview.value = e.target?.result;
+    };
+    reader.readAsDataURL(photo);
 };
 
 const submit = () => {
@@ -181,6 +193,7 @@ const destroyItem = () => {
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-slate-800">Фото (опционально)</label>
                             <input
+                                ref="photoInput"
                                 type="file"
                                 accept="image/*"
                                 @change="onPhotoChange"
@@ -188,13 +201,13 @@ const destroyItem = () => {
                                 class="w-full rounded-lg border border-slate-200 px-3 py-2 text-slate-800 focus:border-slate-400 focus:ring focus:ring-slate-100"
                             />
                             <p v-if="form.errors.photo" class="text-sm text-red-600">{{ form.errors.photo }}</p>
-                            <div v-if="props.testimonial.photo && !form.photo" class="mt-3">
+                            <div v-if="props.testimonial.photo && !photoPreview" class="mt-3">
                                 <div class="text-sm text-slate-600 mb-2">Текущее фото:</div>
                                 <img :src="props.testimonial.photo.startsWith('http') ? props.testimonial.photo : '/storage/' + props.testimonial.photo" alt="Фото отзыва" class="max-h-48 rounded-lg object-cover" />
                             </div>
-                            <div v-if="form.photo" class="mt-3">
+                            <div v-if="photoPreview" class="mt-3">
                                 <div class="text-sm text-slate-600 mb-2">Выбрано фото:</div>
-                                <img :src="URL.createObjectURL(form.photo)" alt="Новый файл" class="max-h-48 rounded-lg object-cover" />
+                                <img :src="photoPreview" alt="Новый файл" class="max-h-48 rounded-lg object-cover" />
                             </div>
                         </div>
                     </template>
