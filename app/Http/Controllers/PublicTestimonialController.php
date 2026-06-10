@@ -13,7 +13,7 @@ class PublicTestimonialController extends Controller
             ->where('is_active', true)
             ->orderByDesc('position')
             ->orderByDesc('id')
-            ->get(['id', 'type', 'title', 'text', 'author_name', 'car_model', 'city', 'rating', 'video_url']);
+            ->get(['id', 'type', 'title', 'text', 'author_name', 'car_model', 'city', 'rating', 'video_url', 'photo']);
 
         return Inertia::render('Testimonials', [
             'videoTestimonials' => $testimonials->where('type', Testimonial::TYPE_VIDEO)->values(),
