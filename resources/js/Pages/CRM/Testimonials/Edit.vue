@@ -47,6 +47,11 @@ const onPhotoChange = () => {
 };
 
 const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        type: form.type ?? 'text',
+    }));
+
     if (props.isNew) {
         form.post(route('crm.testimonials.store'), { forceFormData: true });
     } else {
@@ -86,6 +91,7 @@ const destroyItem = () => {
                 <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-5">
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-slate-800">Тип отзыва</label>
+                        <input type="hidden" name="type" :value="form.type" />
                         <div class="inline-flex p-1 bg-slate-100 rounded-lg">
                             <button
                                 type="button"
