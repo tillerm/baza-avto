@@ -11,8 +11,7 @@ class PublicTestimonialController extends Controller
     {
         $testimonials = Testimonial::query()
             ->where('is_active', true)
-            ->orderByDesc('position')
-            ->orderByDesc('id')
+            ->orderByDesc('created_at')
             ->get(['id', 'type', 'title', 'text', 'author_name', 'car_model', 'city', 'rating', 'video_url', 'photo']);
 
         return Inertia::render('Testimonials', [
