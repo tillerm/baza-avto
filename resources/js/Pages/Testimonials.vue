@@ -306,14 +306,18 @@ function toEmbedUrl(url) {
 .testimonial__image-wrapper {
     width: 100%;
     margin-top: 1rem;
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 0.75rem;
 }
 
 .testimonial__image {
-    width: 100%;
     max-width: 100%;
-    max-height: 320px;
+    max-height: 360px;
+    width: auto;
     height: auto;
     object-fit: contain;
     display: block;
