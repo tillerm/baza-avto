@@ -13,6 +13,21 @@ class TestimonialRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $defaultType = Testimonial::TYPE_TEXT;
+
+        if ($this->route('testimonial') instanceof Testimonial) {
+            $defaultType = $this->route('testimonial')->type ?? $defaultType;
+        }
+
+        if (!$this->has('type') || $this->input('type') === null) {
+            $this->merge([
+                'type' => $defaultType,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
