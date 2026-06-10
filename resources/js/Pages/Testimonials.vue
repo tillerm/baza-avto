@@ -306,12 +306,17 @@ function toEmbedUrl(url) {
 .testimonial__image-wrapper {
     width: 100%;
     margin-top: 1rem;
+    overflow: hidden;
+    border-radius: 1rem;
 }
 
 .testimonial__image {
     width: 100%;
-    max-height: 240px;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 320px;
+    height: auto;
+    object-fit: contain;
+    display: block;
     border-radius: 1rem;
     box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05);
 }
