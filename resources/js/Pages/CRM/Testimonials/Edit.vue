@@ -52,10 +52,15 @@ const submit = () => {
         type: form.type ?? 'text',
     }));
 
+    const submitOptions = {};
+    if (form.photo) {
+        submitOptions.forceFormData = true;
+    }
+
     if (props.isNew) {
-        form.post(route('crm.testimonials.store'), { forceFormData: true });
+        form.post(route('crm.testimonials.store'), submitOptions);
     } else {
-        form.put(route('crm.testimonials.update', props.testimonial.id), { forceFormData: true });
+        form.put(route('crm.testimonials.update', props.testimonial.id), submitOptions);
     }
 };
 
